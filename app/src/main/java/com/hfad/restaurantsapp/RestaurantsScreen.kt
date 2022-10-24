@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Place
@@ -13,15 +15,23 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.hfad.restaurantsapp.ui.theme.RestaurantsAppTheme
 
 @Composable
 fun RestaurantsScreen(){
-    RestaurantItem()
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ) {
+        dummyRestaurant.forEach{
+            restaurant -> RestaurantItem(item = restaurant)
+        }
+    }
 }
 
 @Composable
-fun RestaurantItem(){
+fun RestaurantItem(item: Restaurant){
     Card(
         elevation = 4.dp,
         modifier = Modifier.padding(8.dp)
@@ -35,6 +45,8 @@ fun RestaurantItem(){
                 Modifier.weight(0.15f)
             )
             RestaurantDetails(
+                item.title,
+                item.description,
                 Modifier.weight(0.85f)
             )
         }
@@ -51,20 +63,31 @@ private fun RestaurantIcon(icon: ImageVector, modifier: Modifier){
 }
 
 @Composable
-private fun RestaurantDetails(modifier: Modifier){
+private fun RestaurantDetails(
+    title: String,
+    description: String,
+    modifier: Modifier){
     Column(modifier = modifier) {
         Text(
-            "Alfredo's dishes",
+            text= title,
             style = MaterialTheme.typography.h6
         )
         CompositionLocalProvider(
             LocalContentAlpha provides ContentAlpha.medium
         ) {
             Text(
-                text = "At Alfredo's seafood dishes",
+                text = description,
                 style = MaterialTheme.typography.body2
             )
         }
 
+    }
+}
+
+@Preview(showBackground = false)
+@Composable
+fun DefaultPreview(){
+    RestaurantsAppTheme {
+        RestaurantsScreen()
     }
 }
